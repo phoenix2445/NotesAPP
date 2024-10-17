@@ -9,9 +9,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.notesapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.app.AlertDialog
 
 class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
@@ -42,30 +42,44 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
 
         // Handle delete button click
         holder.deleteButton.setOnClickListener {
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
-            if (userId != null) {
-                FirebaseFirestore.getInstance().collection("users")
-                    .document(userId)
-                    .collection("notes")
-                    .document(note.id)
-                    .delete()
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "Note deleted successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        (notesList as MutableList).removeAt(position)
-                        notifyItemRemoved(position)
+            val context = holder.itemView.context
+
+            // Show confirmation dialog before deleting
+            AlertDialog.Builder(context)
+                .setTitle("Hapus Catatan")
+                .setMessage("Apakah Anda yakin ingin menghapus catatan ini?")
+                .setPositiveButton("Ya") { dialog, _ ->
+                    // Jika pengguna memilih 'Ya', catatan akan dihapus
+                    val userId = FirebaseAuth.getInstance().currentUser?.uid
+                    if (userId != null) {
+                        FirebaseFirestore.getInstance().collection("users")
+                            .document(userId)
+                            .collection("notes")
+                            .document(note.id)
+                            .delete()
+                            .addOnSuccessListener {
+                                Toast.makeText(
+                                    context,
+                                    "Catatan berhasil dihapus",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                (notesList as MutableList).removeAt(position)
+                                notifyItemRemoved(position)
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(
+                                    context,
+                                    "Gagal menghapus catatan",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "Failed to delete note",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            }
+                    dialog.dismiss() //Menutup dialog setelah konfirmasi
+                }
+                //Jika pengguna memilih 'Tidak', dialog akan ditutup dan tidak ada yang terjadi
+                .setNegativeButton("Tidak") { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
         }
     }
 
