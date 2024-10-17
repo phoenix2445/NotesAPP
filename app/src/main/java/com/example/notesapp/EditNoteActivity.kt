@@ -31,7 +31,7 @@ class EditNoteActivity : AppCompatActivity() {
         noteId = intent.getStringExtra("noteId")
 
         if (noteId != null) {
-            loadNote() // Load existing note if noteId is provided
+            loadNote()
         }
 
         findViewById<Button>(R.id.saveButton).setOnClickListener {

@@ -41,7 +41,6 @@ class NotesActivity : AppCompatActivity() {
 
         loadNotes()
 
-        // Register the ActivityResultLauncher for adding/editing notes
         addNoteLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->

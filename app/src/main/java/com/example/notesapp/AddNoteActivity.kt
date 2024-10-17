@@ -16,7 +16,7 @@ class AddNoteActivity : AppCompatActivity() {
     private lateinit var titleEditText: EditText
     private lateinit var contentEditText: EditText
 
-    private var noteId: String? = null // This will store the ID if we're editing a note
+    private var noteId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,6 @@ class AddNoteActivity : AppCompatActivity() {
         titleEditText = findViewById(R.id.titleEditText)
         contentEditText = findViewById(R.id.contentEditText)
 
-        // Check if this activity is opened for editing
         noteId = intent.getStringExtra("noteId")
         if (noteId != null) {
             loadNoteData(noteId!!)
@@ -41,7 +40,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
     }
 
-    // Load note data when editing
+    // Load note
     private fun loadNoteData(noteId: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
@@ -90,12 +89,11 @@ class AddNoteActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     Toast.makeText(this, "Note saved successfully", Toast.LENGTH_SHORT).show()
 
-                    // Mengirim hasil sukses ke NotesActivity
                     val resultIntent = Intent()
                     resultIntent.putExtra("noteAdded", true)
                     setResult(RESULT_OK, resultIntent)
 
-                    finish() // Tutup AddNoteActivity
+                    finish()
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Failed to save note", Toast.LENGTH_SHORT).show()
@@ -129,12 +127,11 @@ class AddNoteActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     Toast.makeText(this, "Note updated successfully", Toast.LENGTH_SHORT).show()
 
-                    // Mengirim hasil sukses ke NotesActivity
                     val resultIntent = Intent()
                     resultIntent.putExtra("noteUpdated", true)
                     setResult(RESULT_OK, resultIntent)
 
-                    finish() // Tutup AddNoteActivity
+                    finish()
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Failed to update note", Toast.LENGTH_SHORT).show()

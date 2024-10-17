@@ -17,7 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.android.gms.common.SignInButton // Import SignInButton
+import com.google.android.gms.common.SignInButton
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -38,11 +38,11 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
-        googleSignInButton = findViewById(R.id.googleSignInButton) // Pastikan ID ini sesuai dengan XML
+        googleSignInButton = findViewById(R.id.googleSignInButton)
 
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("49981525826-rm1mg4qc33veqcr9rhu69315car8ea8v.apps.googleusercontent.com") // Ganti dengan ID klien web Anda
+            .requestIdToken("49981525826-rm1mg4qc33veqcr9rhu69315car8ea8v.apps.googleusercontent.com") // Client ID di Google Developer Console
             .requestEmail()
             .build()
 
@@ -74,7 +74,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
@@ -98,12 +97,9 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success
                     Log.d("LoginActivity", "signInWithCredential:success")
-                    val user = auth.currentUser
-                    // Navigate to NotesActivity
                     startActivity(Intent(this, NotesActivity::class.java))
                     finish()
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
                     Toast.makeText(this, "Authentication Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }

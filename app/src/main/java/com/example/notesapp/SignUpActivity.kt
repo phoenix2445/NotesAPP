@@ -19,7 +19,7 @@ class SignUpActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup) // Use your new sign-up layout here
+        setContentView(R.layout.activity_signup)
 
         auth = FirebaseAuth.getInstance()
 
@@ -39,7 +39,7 @@ class SignUpActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.loginTextView).setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
-            finish() // Optional: close SignUpActivity after redirecting to login
+            finish()
         }
     }
 
@@ -48,10 +48,9 @@ class SignUpActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Sign-up successful! Please Login", Toast.LENGTH_SHORT).show()
-                    // Redirect to NotesActivity or LoginActivity after successful sign-up
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
-                    finish() // Close SignUpActivity after successful registration
+                    finish()
                 } else {
                     Toast.makeText(this, "Sign-up failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }

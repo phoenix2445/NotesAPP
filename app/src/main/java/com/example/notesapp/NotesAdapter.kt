@@ -15,7 +15,6 @@ import android.app.AlertDialog
 
 class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
-    // ViewHolder class to hold individual note views
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.noteTitle)
         val contentTextView: TextView = itemView.findViewById(R.id.noteContent)
@@ -33,23 +32,21 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
         holder.titleTextView.text = note.title
         holder.contentTextView.text = note.content
 
-        // Handle edit button click
         holder.editButton.setOnClickListener {
             val intent = Intent(holder.itemView.context, EditNoteActivity::class.java)
             intent.putExtra("noteId", note.id)
             holder.itemView.context.startActivity(intent)
         }
 
-        // Handle delete button click
         holder.deleteButton.setOnClickListener {
             val context = holder.itemView.context
 
-            // Show confirmation dialog before deleting
+            // Konfirmasi delete notes
             AlertDialog.Builder(context)
-                .setTitle("Hapus Catatan")
-                .setMessage("Apakah Anda yakin ingin menghapus catatan ini?")
-                .setPositiveButton("Ya") { dialog, _ ->
-                    // Jika pengguna memilih 'Ya', catatan akan dihapus
+                .setTitle("Delete Note")
+                .setMessage("Do you want to delete this note?")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    //Jika pengguna memilih 'Ya', catatan akan dihapus
                     val userId = FirebaseAuth.getInstance().currentUser?.uid
                     if (userId != null) {
                         FirebaseFirestore.getInstance().collection("users")
@@ -60,7 +57,7 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
                             .addOnSuccessListener {
                                 Toast.makeText(
                                     context,
-                                    "Catatan berhasil dihapus",
+                                    "Note deleted successfully",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 (notesList as MutableList).removeAt(position)
@@ -69,15 +66,15 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
                             .addOnFailureListener {
                                 Toast.makeText(
                                     context,
-                                    "Gagal menghapus catatan",
+                                    "Failed to delete note",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                     }
-                    dialog.dismiss() //Menutup dialog setelah konfirmasi
+                    dialog.dismiss() // Menutup dialog setelah konfirmasi
                 }
-                //Jika pengguna memilih 'Tidak', dialog akan ditutup dan tidak ada yang terjadi
-                .setNegativeButton("Tidak") { dialog, _ -> dialog.dismiss() }
+                // Jika pengguna memilih 'Tidak', dialog akan ditutup dan tidak ada yang terjadi
+                .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
                 .create()
                 .show()
         }
@@ -87,7 +84,6 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
         return notesList.size
     }
 
-    // Update the list when new data is available
     fun submitList(newNotes: List<Note>) {
         notesList = newNotes
         notifyDataSetChanged()

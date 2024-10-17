@@ -34,17 +34,17 @@ class ResetPasswordActivity : AppCompatActivity() {
     private fun resetPassword() {
         val email = emailEditText.text.toString().trim()
         if (email.isEmpty()) {
-            Toast.makeText(this, "Masukkan email Anda", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
             return
         }
 
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "If this email is registered, you will receive a password reset link.", Toast.LENGTH_SHORT).show()
-                    finish() // Kembali ke halaman login
+                    Toast.makeText(this, "If the email exists, then a password reset link has been sent to your email.", Toast.LENGTH_SHORT).show()
+                    finish()
                 } else {
-                    Toast.makeText(this, "Gagal mengirim email: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Failed to send password reset email: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
